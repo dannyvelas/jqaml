@@ -1,3 +1,2 @@
 (executable
- (public_name jqaml)
  (name hello_world))
