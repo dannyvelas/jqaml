@@ -1,4 +1,5 @@
 (executable
  (public_name jqaml)
  (name main)
- (libraries jqaml))
+ (libraries jqaml core)
+ (preprocess (pps ppx_jane)))
