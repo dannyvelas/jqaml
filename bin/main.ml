@@ -21,16 +21,14 @@ let next state =
   (new_state, next_byte)
 
 let is_at_end state = state.pos >= String.length state.input
-let append_token state token = { state with tokens = state.tokens @ token }
+let prepend_token state token = { state with tokens = token :: state.tokens }
 
 type err = { message : string; value : char }
 
 let update_state state byte =
   match byte with
   | '.' ->
-      Ok
-        (append_token state
-           [ { tokenType = DOT; lexeme = Char.to_string byte } ])
+      Ok (prepend_token state { tokenType = DOT; lexeme = Char.to_string byte })
   | 'a' .. 'z' | 'A' .. 'Z' -> Ok state
   | '0' .. '9' -> Ok state
   | '|' -> Ok state
@@ -42,13 +40,14 @@ let update_state state byte =
 let tokenize s =
   let rec tokenize state =
     if is_at_end state then
-      Ok state.tokens
+      (* state.tokens is stored in reverse for performance reasons (cons is constant time, append is linear)
+         so we have to reverse the list before returning *)
+      Ok (List.rev state.tokens)
     else
       let state = { state with start = state.pos } in
       let state, byte = next state in
-      match update_state state byte with
-      | Error err -> Error err
-      | Ok state -> tokenize state
+      let stateResult = update_state state byte in
+      stateResult |> Result.bind ~f:tokenize
   in
   tokenize { input = s; start = 0; pos = 0; tokens = [] }
 
