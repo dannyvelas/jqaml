@@ -1,5 +1,7 @@
 open Core
 
+let option_default default opt = match opt with Some x -> x | None -> default
+
 let () =
-  let s = In_channel.input_line In_channel.stdin in
-  match s with None -> printf "none" | Some x -> printf "%s\n" x
+  In_channel.input_line In_channel.stdin
+  |> option_default "nothing" |> printf "%s\n"
