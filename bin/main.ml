@@ -1,5 +1,5 @@
 open Core
 
 let () =
-  In_channel.iter_lines In_channel.stdin ~f:(fun l ->
-      printf "%d\n" (String.length l))
+  let s = In_channel.input_line In_channel.stdin in
+  match s with None -> printf "none" | Some x -> printf "%s\n" x
