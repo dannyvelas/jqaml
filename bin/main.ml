@@ -1,7 +1,9 @@
-open Core
-
-let option_default default opt = match opt with Some x -> x | None -> default
+(*open Core*)
 
 let () =
-  In_channel.input_line In_channel.stdin
-  |> option_default "nothing" |> printf "%s\n"
+  try
+    while true do
+      let line = read_line () in
+      print_endline line
+    done
+  with End_of_file -> ()
