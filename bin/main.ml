@@ -7,7 +7,7 @@ let () =
     let a = Parser.main Lexer.token lexbuf in
     List.iter ~f:(fun a -> printf "%d\n" a) a
   with
-  | Lexer.Error msg -> Printf.eprintf "%s%!" msg
+  | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
   | Parser.Error ->
       Printf.eprintf "At offset %d: syntax error.\n%!"
         (Lexing.lexeme_start lexbuf);
