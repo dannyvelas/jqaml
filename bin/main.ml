@@ -1,10 +1,10 @@
-(*open Core*)
+open Core
 
 let repl inputch =
   let lexbuf = Lexing.from_channel inputch in
   try
     let a = Parser.main Lexer.token lexbuf in
-    Core.List.iter ~f:(fun a -> Core.printf "%d\n" a) a
+    List.iter ~f:(fun a -> printf "%d\n" a) a
   with
   | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
   | Parser.Error ->
@@ -13,13 +13,13 @@ let repl inputch =
       In_channel.close inputch
 
 let () =
-  let argv = Core.Sys.get_argv () in
+  let argv = Sys.get_argv () in
   let filename =
     match argv.(1) with exception Invalid_argument _ -> None | x -> Some x
   in
   let inputch =
-    Option.fold ~none:In_channel.stdin
-      ~some:(fun f -> Core.In_channel.create f)
-      filename
+    match filename with
+    | None -> In_channel.stdin
+    | Some filename -> In_channel.create filename
   in
   repl inputch
