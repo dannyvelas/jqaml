@@ -1,5 +1,11 @@
 (executable
  (public_name jqaml)
  (name main)
- (libraries jqaml core)
+ (modules main parser lexer)
+ (libraries jqaml core batteries)
  (preprocess (pps ppx_jane)))
+
+(menhir
+ (modules parser))
+
+(ocamllex lexer)
