@@ -3,8 +3,10 @@ open Core
 let repl inputch =
   let lexbuf = Lexing.from_channel inputch in
   try
-    let a = Parser.main Lexer.token lexbuf in
-    List.iter ~f:(fun a -> printf "%d\n" a) a
+    let program = Parser.prog Lexer.token lexbuf in
+    match program with
+    | Some (Period s) -> print_endline s
+    | None -> print_endline "nothing found!"
   with
   | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
   | Parser.Error ->

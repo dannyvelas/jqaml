@@ -1,7 +1,7 @@
 (executable
  (public_name jqaml)
  (name main)
- (modules main parser lexer)
+ (modules main parser lexer cst)
  (libraries core)
  (preprocess (pps ppx_jane)))
 
