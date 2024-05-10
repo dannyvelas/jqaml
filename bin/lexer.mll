@@ -5,6 +5,7 @@ exception SyntaxError of string
 }
 
 (* Helper regexes *)
+
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
 let alphanum = (alpha|digit)

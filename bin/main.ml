@@ -1,16 +1,85 @@
 open Core
 
-let repl inputch =
+let rec repl inputch =
   let lexbuf = Lexing.from_channel inputch in
   try
-    let program = Parser.prog Lexer.token lexbuf in
-    print_endline (Cst.show_program program)
+    let tokenStr =
+      match Lexer.token lexbuf with
+      | PIPE -> "PIPE"
+      | PERIOD -> "PERIOD"
+      | SEMI -> "SEMI"
+      | COMMA -> "COMMA"
+      | COLON -> "COLON"
+      | EQUAL -> "EQUAL"
+      | DOLLAR -> "DOLLAR"
+      | RECURSE -> "RECURSE"
+      | LBRACKET -> "LBRACKET"
+      | RBRACKET -> "RBRACKET"
+      | LPAREN -> "LPAREN"
+      | RPAREN -> "RPAREN"
+      | LCURLY -> "LCURLY"
+      | RCURLY -> "RCURLY"
+      | PLUS -> "PLUS"
+      | MINUS -> "MINUS"
+      | MUL -> "MUL"
+      | DIV -> "DIV"
+      | AND -> "AND"
+      | OR -> "OR"
+      | NOT -> "NOT"
+      | INDEX s -> Printf.sprintf "INDEX %s\n" s
+      | NULL -> "NULL"
+      | NUMBER_CONSTANT d -> Printf.sprintf "NUMBER_CONSTANT %d\n" d
+      | STRING_CONSTANT s -> Printf.sprintf "STRING_CONSTANT %s\n" s
+      | TRUE -> "TRUE"
+      | FALSE -> "FALSE"
+      | DEF -> "DEF"
+      | REDUCE -> "REDUCE"
+      | FOREACH -> "FOREACH"
+      | EOF -> "EOF"
+    in
+    print_endline tokenStr;
+    repl inputch
   with
   | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
   | Parser.Error ->
       Printf.eprintf "At offset %d: syntax error.\n%!"
         (Lexing.lexeme_start lexbuf);
       In_channel.close inputch
+
+(*
+let load x = match x with
+  | PIPE -> "PIPE"
+  | PERIOD -> "PERIOD"
+  | SEMI -> "SEMI"
+  | COMMA -> "COMMA"
+  | COLON -> "COLON"
+  | EQUAL -> "EQUAL"
+  | DOLLAR -> "DOLLAR"
+  | RECURSE -> "RECURSE"
+  | LBRACKET -> "LBRACKET"
+  | RBRACKET -> "RBRACKET"
+  | LPAREN -> "LPAREN"
+  | RPAREN -> "RPAREN"
+  | LCURLY -> "LCURLY"
+  | RCURLY -> "RCURLY"
+  | PLUS -> "PLUS"
+  | MINUS -> "MINUS"
+  | MUL -> "MUL"
+  | DIV -> "DIV"
+  | AND -> "AND"
+  | OR -> "OR"
+  | NOT -> "NOT"
+  | INDEX -> "INDEX"
+  | NULL -> "NULL"
+  | NUMBER -> "NUMBER" _CONSTANT
+  | STRING -> "STRING" _CONSTANT
+  | TRUE -> "TRUE"
+  | FALSE -> "FALSE"
+  | DEF -> "DEF"
+  | REDUCE -> "REDUCE"
+  | FOREACH -> "FOREACH"
+  | EOF -> "EOF"
+  *)
 
 let () =
   let argv = Sys.get_argv () in
