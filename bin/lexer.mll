@@ -9,6 +9,7 @@ exception SyntaxError of string
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
 let alphanum = (alpha|digit)
+let whitespace = [' ' '\t']+
 
 (* Token regexes *)
 
@@ -23,3 +24,4 @@ rule token = parse
 | "false" { FALSE }
 | ".." { RECURSE }
 | "." identifier { INDEX (Lexing.lexeme lexbuf) }
+| whitespace { token lexbuf } (* skip whitespace *)
