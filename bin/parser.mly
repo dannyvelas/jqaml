@@ -25,7 +25,7 @@ prog:
   ;
 
 query:
-  | term { Cst.Term {term= Cst.Identity } }
+  | term { Cst.Term {term= $1 } }
   ;
 
 term: 
