@@ -4,9 +4,7 @@ let repl inputch =
   let lexbuf = Lexing.from_channel inputch in
   try
     let program = Parser.prog Lexer.token lexbuf in
-    match program with
-    | Some (Period s) -> print_endline s
-    | None -> print_endline "nothing found!"
+    print_endline (Cst.show_program program)
   with
   | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
   | Parser.Error ->

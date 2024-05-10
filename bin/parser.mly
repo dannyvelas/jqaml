@@ -1,5 +1,5 @@
 /* symbols */
-%token PIPE PERIOD SEMI COMMA COLON EQUAL DOLLAR
+%token PIPE PERIOD SEMI COMMA COLON EQUAL DOLLAR RECURSE INDEX
 /* brackets */
 %token LBRACKET RBRACKET LPAREN RPAREN LCURLY RCURLY
 /* arithmetic op */
@@ -7,7 +7,7 @@
 /* logical operators */
 %token AND OR NOT
 /* constants */
-%token NIL
+%token NULL
 %token <int> NUMBER_CONSTANT
 %token <string> STRING_CONSTANT
 %token TRUE FALSE
@@ -16,10 +16,22 @@
 /* EOF */
 %token EOF
 
-%start <Cst.program option> prog
+%start <Cst.program> prog
 
 %%
 
 prog:
-  | PERIOD { Some (Period ".") }
-  | EOF { None };
+  | query { Cst.Query $1 }
+  ;
+
+query:
+  | term { Cst.Term {term= Cst.Identity } }
+  ;
+
+term: 
+  | PERIOD { Cst.Identity }
+  | RECURSE { Cst.Recurse }
+  | NULL { Cst.Null }
+  | FALSE { Cst.False }
+  | TRUE { Cst.True }
+  ;
