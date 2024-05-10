@@ -1,44 +1,47 @@
 open Core
 
-let rec repl inputch =
+let run inputch =
   let lexbuf = Lexing.from_channel inputch in
   try
-    let tokenStr =
-      match Lexer.token lexbuf with
-      | PIPE -> "PIPE"
-      | PERIOD -> "PERIOD"
-      | SEMI -> "SEMI"
-      | COMMA -> "COMMA"
-      | COLON -> "COLON"
-      | EQUAL -> "EQUAL"
-      | DOLLAR -> "DOLLAR"
-      | RECURSE -> "RECURSE"
-      | LBRACKET -> "LBRACKET"
-      | RBRACKET -> "RBRACKET"
-      | LPAREN -> "LPAREN"
-      | RPAREN -> "RPAREN"
-      | LCURLY -> "LCURLY"
-      | RCURLY -> "RCURLY"
-      | PLUS -> "PLUS"
-      | MINUS -> "MINUS"
-      | MUL -> "MUL"
-      | DIV -> "DIV"
-      | AND -> "AND"
-      | OR -> "OR"
-      | NOT -> "NOT"
-      | INDEX s -> Printf.sprintf "INDEX %s\n" s
-      | NULL -> "NULL"
-      | NUMBER_CONSTANT d -> Printf.sprintf "NUMBER_CONSTANT %d\n" d
-      | STRING_CONSTANT s -> Printf.sprintf "STRING_CONSTANT %s\n" s
-      | TRUE -> "TRUE"
-      | FALSE -> "FALSE"
-      | DEF -> "DEF"
-      | REDUCE -> "REDUCE"
-      | FOREACH -> "FOREACH"
-      | EOF -> "EOF"
+    let repl () =
+      let tokenStr =
+        match Lexer.token lexbuf with
+        | PIPE -> "PIPE"
+        | PERIOD -> "PERIOD"
+        | SEMI -> "SEMI"
+        | COMMA -> "COMMA"
+        | COLON -> "COLON"
+        | EQUAL -> "EQUAL"
+        | DOLLAR -> "DOLLAR"
+        | RECURSE -> "RECURSE"
+        | LBRACKET -> "LBRACKET"
+        | RBRACKET -> "RBRACKET"
+        | LPAREN -> "LPAREN"
+        | RPAREN -> "RPAREN"
+        | LCURLY -> "LCURLY"
+        | RCURLY -> "RCURLY"
+        | PLUS -> "PLUS"
+        | MINUS -> "MINUS"
+        | MUL -> "MUL"
+        | DIV -> "DIV"
+        | AND -> "AND"
+        | OR -> "OR"
+        | NOT -> "NOT"
+        | INDEX s -> Printf.sprintf "INDEX %s\n" s
+        | NULL -> "NULL"
+        | NUMBER_CONSTANT d -> Printf.sprintf "NUMBER_CONSTANT %d\n" d
+        | STRING_CONSTANT s -> Printf.sprintf "STRING_CONSTANT %s\n" s
+        | TRUE -> "TRUE"
+        | FALSE -> "FALSE"
+        | DEF -> "DEF"
+        | REDUCE -> "REDUCE"
+        | FOREACH -> "FOREACH"
+        | EOF -> "EOF"
+      in
+      print_endline tokenStr
     in
-    print_endline tokenStr;
-    repl inputch
+    repl ();
+    repl ()
   with
   | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
   | Parser.Error ->
@@ -91,4 +94,4 @@ let () =
     | None -> In_channel.stdin
     | Some filename -> In_channel.create filename
   in
-  repl inputch
+  run inputch
