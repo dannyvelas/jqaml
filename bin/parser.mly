@@ -1,11 +1,13 @@
 /* symbols */
-%token PIPE PERIOD SEMI COMMA COLON EQUAL DOLLAR RECURSE INDEX
+%token PIPE PERIOD SEMI COMMA COLON EQUAL DOLLAR RECURSE
 /* brackets */
 %token LBRACKET RBRACKET LPAREN RPAREN LCURLY RCURLY
 /* arithmetic op */
 %token PLUS MINUS MUL DIV
 /* logical operators */
 %token AND OR NOT
+/* indexing */
+%token <string> INDEX
 /* constants */
 %token NULL
 %token <int> NUMBER_CONSTANT
@@ -34,4 +36,5 @@ term:
   | NULL { Cst.Null }
   | FALSE { Cst.False }
   | TRUE { Cst.True }
+  | INDEX { Cst.Index $1 }
   ;
