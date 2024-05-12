@@ -37,3 +37,4 @@ rule token = parse
 | "." identifier { INDEX (Lexing.lexeme lexbuf) }
 | whitespace { token lexbuf } (* skip whitespace *)
 | newline { advance_line lexbuf; token lexbuf }
+| eof { EOF }

@@ -2,10 +2,11 @@ open Core
 
 let run inputch =
   let lexbuf = Lexing.from_channel inputch in
-  try
-    let repl () =
-      let tokenStr =
-        match Lexer.token lexbuf with
+  let rec repl () =
+    try
+      let token = Lexer.token lexbuf in
+      let token_str =
+        match token with
         | PIPE -> "PIPE"
         | PERIOD -> "PERIOD"
         | SEMI -> "SEMI"
@@ -38,16 +39,16 @@ let run inputch =
         | FOREACH -> "FOREACH"
         | EOF -> "EOF"
       in
-      print_endline tokenStr
-    in
-    repl ();
-    repl ()
-  with
-  | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
-  | Parser.Error ->
-      Printf.eprintf "At offset %d: syntax error.\n%!"
-        (Lexing.lexeme_start lexbuf);
-      In_channel.close inputch
+      print_endline token_str;
+      match token with EOF -> () | _ -> repl ()
+    with
+    | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
+    | Parser.Error ->
+        Printf.eprintf "At offset %d: syntax error.\n%!"
+          (Lexing.lexeme_start lexbuf);
+        In_channel.close inputch
+  in
+  repl ()
 
 let () =
   let argv = Sys.get_argv () in
