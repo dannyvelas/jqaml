@@ -42,17 +42,16 @@ let token_to_str : Parser.token -> string = function
   | EOF -> "EOF"
 
 let run inputch =
-  let lexbuf = Lexing.from_channel inputch in
-  let rec repl () =
+  let rec repl lexbuf =
     let token = get_next_token lexbuf in
     match token with
     | Ok EOF -> ()
     | Ok x ->
-        print_endline (token_to_str x);
-        repl ()
+        print_endline @@ token_to_str x;
+        repl lexbuf
     | Error msg -> print_endline msg
   in
-  repl ()
+  repl @@ Lexing.from_channel inputch
 
 let () =
   let argv = Sys.get_argv () in
