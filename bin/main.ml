@@ -1,52 +1,56 @@
 open Core
 
+let get_next_token lexbuf =
+  try Ok (Lexer.token lexbuf) with
+  | Lexer.SyntaxError msg -> Error (Printf.sprintf "%s%!" msg)
+  | Parser.Error ->
+      Error
+        (Printf.sprintf "At offset %d: syntax error.\n%!"
+           (Lexing.lexeme_start lexbuf))
+
+let token_to_str : Parser.token -> string = function
+  | PIPE -> "PIPE"
+  | PERIOD -> "PERIOD"
+  | SEMI -> "SEMI"
+  | COMMA -> "COMMA"
+  | COLON -> "COLON"
+  | EQUAL -> "EQUAL"
+  | DOLLAR -> "DOLLAR"
+  | RECURSE -> "RECURSE"
+  | LBRACKET -> "LBRACKET"
+  | RBRACKET -> "RBRACKET"
+  | LPAREN -> "LPAREN"
+  | RPAREN -> "RPAREN"
+  | LCURLY -> "LCURLY"
+  | RCURLY -> "RCURLY"
+  | PLUS -> "PLUS"
+  | MINUS -> "MINUS"
+  | MUL -> "MUL"
+  | DIV -> "DIV"
+  | AND -> "AND"
+  | OR -> "OR"
+  | NOT -> "NOT"
+  | INDEX s -> Printf.sprintf "INDEX %s\n" s
+  | NULL -> "NULL"
+  | NUMBER_CONSTANT d -> Printf.sprintf "NUMBER_CONSTANT %d\n" d
+  | STRING_CONSTANT s -> Printf.sprintf "STRING_CONSTANT %s\n" s
+  | TRUE -> "TRUE"
+  | FALSE -> "FALSE"
+  | DEF -> "DEF"
+  | REDUCE -> "REDUCE"
+  | FOREACH -> "FOREACH"
+  | EOF -> "EOF"
+
 let run inputch =
   let lexbuf = Lexing.from_channel inputch in
   let rec repl () =
-    try
-      let token = Lexer.token lexbuf in
-      let token_str =
-        match token with
-        | PIPE -> "PIPE"
-        | PERIOD -> "PERIOD"
-        | SEMI -> "SEMI"
-        | COMMA -> "COMMA"
-        | COLON -> "COLON"
-        | EQUAL -> "EQUAL"
-        | DOLLAR -> "DOLLAR"
-        | RECURSE -> "RECURSE"
-        | LBRACKET -> "LBRACKET"
-        | RBRACKET -> "RBRACKET"
-        | LPAREN -> "LPAREN"
-        | RPAREN -> "RPAREN"
-        | LCURLY -> "LCURLY"
-        | RCURLY -> "RCURLY"
-        | PLUS -> "PLUS"
-        | MINUS -> "MINUS"
-        | MUL -> "MUL"
-        | DIV -> "DIV"
-        | AND -> "AND"
-        | OR -> "OR"
-        | NOT -> "NOT"
-        | INDEX s -> Printf.sprintf "INDEX %s\n" s
-        | NULL -> "NULL"
-        | NUMBER_CONSTANT d -> Printf.sprintf "NUMBER_CONSTANT %d\n" d
-        | STRING_CONSTANT s -> Printf.sprintf "STRING_CONSTANT %s\n" s
-        | TRUE -> "TRUE"
-        | FALSE -> "FALSE"
-        | DEF -> "DEF"
-        | REDUCE -> "REDUCE"
-        | FOREACH -> "FOREACH"
-        | EOF -> "EOF"
-      in
-      print_endline token_str;
-      match token with EOF -> () | _ -> repl ()
-    with
-    | Lexer.SyntaxError msg -> Printf.eprintf "%s%!" msg
-    | Parser.Error ->
-        Printf.eprintf "At offset %d: syntax error.\n%!"
-          (Lexing.lexeme_start lexbuf);
-        In_channel.close inputch
+    let token = get_next_token lexbuf in
+    match token with
+    | Ok EOF -> ()
+    | Ok x ->
+        print_endline (token_to_str x);
+        repl ()
+    | Error msg -> print_endline msg
   in
   repl ()
 
