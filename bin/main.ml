@@ -41,17 +41,17 @@ let token_to_str : Parser.token -> string = function
   | FOREACH -> "FOREACH"
   | EOF -> "EOF"
 
-let run inputch =
-  let rec repl lexbuf =
+let run lexbuf =
+  let rec repl () =
     let token = get_next_token lexbuf in
     match token with
     | Ok EOF -> ()
     | Ok x ->
         print_endline @@ token_to_str x;
-        repl lexbuf
+        repl ()
     | Error msg -> print_endline msg
   in
-  repl @@ Lexing.from_channel inputch
+  repl ()
 
 let () =
   let argv = Sys.get_argv () in
@@ -63,4 +63,4 @@ let () =
     | None -> In_channel.stdin
     | Some filename -> In_channel.create filename
   in
-  run inputch
+  run @@ Lexing.from_channel inputch
