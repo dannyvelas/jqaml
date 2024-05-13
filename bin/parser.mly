@@ -1,12 +1,14 @@
 %token <string> IDENTIFIER
 /* symbols */
-%token PIPE PERIOD SEMI COMMA COLON EQUAL DOLLAR RECURSE
+%token ASSIGN PIPE PERIOD SEMI COMMA COLON EQUAL DOLLAR RECURSE
 /* brackets */
 %token LBRACKET RBRACKET LPAREN RPAREN LCURLY RCURLY
 /* arithmetic op */
 %token PLUS MINUS MUL DIV
 /* logical operators */
 %token AND OR NOT
+/* comparison operators */
+%token EQ NEQ
 /* indexing */
 %token <string> INDEX
 /* constants */

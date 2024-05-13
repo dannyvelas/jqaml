@@ -34,6 +34,9 @@ rule token = parse
 | "null" { NULL }
 | "true" { TRUE }
 | "false" { FALSE }
+| "=" { ASSIGN }
+| "==" { EQ }
+| "!=" { NEQ }
 | ".." { RECURSE }
 | "." identifier { INDEX (Lexing.lexeme lexbuf) }
 | identifier { IDENTIFIER (Lexing.lexeme lexbuf) }

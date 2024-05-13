@@ -41,6 +41,9 @@ let token_to_str : Parser.token -> string = function
   | FOREACH -> "FOREACH"
   | EOF -> "EOF"
   | IDENTIFIER s -> Printf.sprintf "IDENTIFIER %s\n" s
+  | EQ -> "EQ"
+  | NEQ -> "NEQ"
+  | ASSIGN -> "ASSIGN"
 
 let run lexbuf =
   let rec repl () =
