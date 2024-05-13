@@ -1,3 +1,4 @@
+%token <string> IDENTIFIER
 /* symbols */
 %token PIPE PERIOD SEMI COMMA COLON EQUAL DOLLAR RECURSE
 /* brackets */

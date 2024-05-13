@@ -40,6 +40,7 @@ let token_to_str : Parser.token -> string = function
   | REDUCE -> "REDUCE"
   | FOREACH -> "FOREACH"
   | EOF -> "EOF"
+  | IDENTIFIER s -> Printf.sprintf "IDENTIFIER %s\n" s
 
 let run lexbuf =
   let rec repl () =
