@@ -30,11 +30,13 @@ let identifier = (alpha) ('_'|alphanum)*
 
 rule token = parse 
 | "." { PERIOD }
+(* constants *)
 | "null" { NULL }
 | "true" { TRUE }
 | "false" { FALSE }
 | ".." { RECURSE }
 | "." identifier { INDEX (Lexing.lexeme lexbuf) }
+(* whitespace and eof *)
 | whitespace { token lexbuf } (* skip whitespace *)
 | newline { advance_line lexbuf; token lexbuf }
 | eof { EOF }
