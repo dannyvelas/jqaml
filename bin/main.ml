@@ -59,6 +59,6 @@ let () =
   let inputch =
     match Sys.argv.(1) with
     | exception Invalid_argument _ -> In_channel.stdin
-    | x -> open_in x
+    | file -> open_in file
   in
   run @@ Lexing.from_channel inputch
