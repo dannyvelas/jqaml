@@ -45,9 +45,7 @@ rule token = parse
 | "." identifier { INDEX (Lexing.lexeme lexbuf) }
 | identifier as word
   {
-    try
-	    let token = Hashtbl.find keyword_table word in
-      token
+    try Hashtbl.find keyword_table word
     with Not_found -> IDENTIFIER (Lexing.lexeme lexbuf)
   }
 (* whitespace and eof *)
