@@ -1,10 +1,15 @@
-let get_next_token lexbuf =
-  try Ok (Lexer.token lexbuf) with
+let parse_next_token lexbuf =
+  try Ok (Parser.prog Lexer.token lexbuf) with
   | Lexer.SyntaxError msg -> Error (Printf.sprintf "%s%!" msg)
   | Parser.Error ->
       Error
         (Printf.sprintf "At offset %d: syntax error.\n%!"
            (Lexing.lexeme_start lexbuf))
+
+(*
+let get_next_token lexbuf =
+  try Ok (Lexer.token lexbuf)
+  with Lexer.SyntaxError msg -> Error (Printf.sprintf "%s%!" msg)
 
 let token_to_str : Parser.token -> string = function
   | PIPE -> "PIPE"
@@ -43,13 +48,25 @@ let token_to_str : Parser.token -> string = function
   | NEQ -> "NEQ"
   | ASSIGN -> "ASSIGN"
 
-let run lexbuf =
+let run_lexer lexbuf =
   let rec repl () =
     let token = get_next_token lexbuf in
     match token with
     | Ok EOF -> ()
+    | Ok token ->
+        print_endline @@ token_to_str token;
+        repl ()
+    | Error msg -> print_endline msg
+  in
+  repl ()
+  *)
+
+let run_parser lexbuf =
+  let rec repl () =
+    let cst = parse_next_token lexbuf in
+    match cst with
     | Ok x ->
-        print_endline @@ token_to_str x;
+        print_endline @@ Cst.show_program x;
         repl ()
     | Error msg -> print_endline msg
   in
@@ -61,4 +78,4 @@ let () =
     | exception Invalid_argument _ -> In_channel.stdin
     | file -> open_in file
   in
-  run @@ Lexing.from_channel inputch
+  run_parser @@ Lexing.from_channel inputch

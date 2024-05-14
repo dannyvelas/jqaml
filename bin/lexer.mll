@@ -32,16 +32,23 @@ let newline = "\r\n" | '\n'
 (* Token regexes *)
 
 let identifier = (alpha) ('_'|alphanum)*
+let dec_constant = digit+
 
 (* Rules *)
 
 rule token = parse 
 | "." { PERIOD }
-(* constants *)
+(* symbols *)
+| "[" { LBRACKET }
+| "]" { RBRACKET }
+| ":" { COLON }
 | "=" { ASSIGN }
 | "==" { EQ }
 | "!=" { NEQ }
 | ".." { RECURSE }
+(* constants *)
+| dec_constant { NUMBER_CONSTANT (int_of_string (Lexing.lexeme lexbuf)) } 
+(* idents *)
 | "." identifier { INDEX (Lexing.lexeme lexbuf) }
 | identifier as word
   {
