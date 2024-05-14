@@ -4,6 +4,13 @@ open Lexing
 
 exception SyntaxError of string
 
+let keyword_table = 
+  let table = Hashtbl.create 3 in 
+  Hashtbl.add table "null" NULL;
+  Hashtbl.add table "true" TRUE;
+  Hashtbl.add table "false" FALSE;
+  table
+
 (* stolen from: https://github.com/austral/austral/blob/a211109833fa5604c13f0f2eac86146bc2ed2639/lib/Lexer.mll#L49 *)
 let advance_line lexbuf =
   let pos = lexbuf.lex_curr_p in
@@ -31,15 +38,18 @@ let identifier = (alpha) ('_'|alphanum)*
 rule token = parse 
 | "." { PERIOD }
 (* constants *)
-| "null" { NULL }
-| "true" { TRUE }
-| "false" { FALSE }
 | "=" { ASSIGN }
 | "==" { EQ }
 | "!=" { NEQ }
 | ".." { RECURSE }
 | "." identifier { INDEX (Lexing.lexeme lexbuf) }
-| identifier { IDENTIFIER (Lexing.lexeme lexbuf) }
+| identifier as word
+  {
+    try
+	    let token = Hashtbl.find keyword_table word in
+      token
+    with Not_found -> IDENTIFIER (Lexing.lexeme lexbuf)
+  }
 (* whitespace and eof *)
 | whitespace { token lexbuf } (* skip whitespace *)
 | newline { advance_line lexbuf; token lexbuf }
