@@ -1,5 +1,3 @@
-open Core
-
 let get_next_token lexbuf =
   try Ok (Lexer.token lexbuf) with
   | Lexer.SyntaxError msg -> Error (Printf.sprintf "%s%!" msg)
@@ -58,13 +56,9 @@ let run lexbuf =
   repl ()
 
 let () =
-  let argv = Sys.get_argv () in
-  let filename =
-    match argv.(1) with exception Invalid_argument _ -> None | x -> Some x
-  in
   let inputch =
-    match filename with
-    | None -> In_channel.stdin
-    | Some filename -> In_channel.create filename
+    match Sys.argv.(1) with
+    | exception Invalid_argument _ -> In_channel.stdin
+    | x -> open_in x
   in
   run @@ Lexing.from_channel inputch
