@@ -1,22 +1,3 @@
-type program = Query of query [@@deriving show]
-and query = Term of term | JoinedQuery of query * operator * query
-
-and term =
-  | Null
-  | True
-  | False
-  | Identity of bracket_suffix list
-  | Recurse
-  | Index of string
-  | BracketSuffix of bracket_suffix
-  | Number of int
-
-and bracket_suffix = Iteration | Index of index
-
-and index =
-  | BracketQuery of query
-  | StartSlice of query
-  | EndSlice of query
-  | StartEndSlice of query * query
-
-and operator = PIPE
+type program = Expr of expr
+and expr = Number of int | Term of int * operator * int [@@deriving show]
+and operator = MINUS | PLUS | MULT

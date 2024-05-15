@@ -46,6 +46,7 @@ rule token = parse
 | "==" { EQ }
 | "!=" { NEQ }
 | ".." { RECURSE }
+| "+" { PLUS }
 (* constants *)
 | dec_constant { NUMBER_CONSTANT (int_of_string (Lexing.lexeme lexbuf)) } 
 (* idents *)
