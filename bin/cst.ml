@@ -1,5 +1,5 @@
 type program = Query of query [@@deriving show]
-and query = Term of { term : term }
+and query = Term of term | JoinedQuery of query * operator * query
 
 and term =
   | Null
@@ -18,3 +18,5 @@ and index =
   | StartSlice of query
   | EndSlice of query
   | StartEndSlice of query * query
+
+and operator = PIPE
