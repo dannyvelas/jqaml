@@ -27,8 +27,6 @@
 
 prog:
   | query eos { Cst.Query $1 }
-  | EOL { Cst.Empty }
-  | EOF { Cst.Empty }
   ;
 
 eos:
