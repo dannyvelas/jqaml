@@ -25,6 +25,15 @@
 
 %%
 
+/* TODO:
+  for the byte input "<PERIOD> <EOF>"
+  expection:
+    new program: (Cst.Query (Cst.Term (Cst.Identity [])))
+  reality
+    new program: (Cst.Query (Cst.Term (Cst.Identity [])))
+    new program: Cst.Empty
+  why does the parser run twice?
+*/
 prog:
   | query eos { Cst.Query $1 }
   | EOF { Cst.Empty }
