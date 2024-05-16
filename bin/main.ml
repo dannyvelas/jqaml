@@ -8,6 +8,7 @@ let parse_next_token lexbuf =
 
 let run_parser lexbuf =
   let rec repl () =
+    print_string "new program: ";
     let cst = parse_next_token lexbuf in
     match cst with
     | Ok x ->

@@ -26,12 +26,19 @@
 %%
 
 prog:
-  | query { Cst.Query $1 }
+  | query eos { Cst.Query $1 }
+  | EOL { Cst.Empty }
   | EOF { Cst.Empty }
+  ;
+
+eos:
+  | EOL { }
+  | EOF { }
+  ;
 
 query:
-  | term EOL { Cst.Term $1 }
-  ;
+| term { Cst.Term $1 }
+;
 
 term:
   | PERIOD { Cst.Identity [] }
