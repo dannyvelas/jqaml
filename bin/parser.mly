@@ -35,13 +35,7 @@
   why does the parser run twice?
 */
 prog:
-  | query eos { Cst.Query $1 }
-  | EOF { Cst.Empty }
-  ;
-
-eos:
-  | EOL {}
-  | EOF {}
+  | PERIOD EOF { (Cst.Query (Cst.Term (Cst.Identity []))) }
   ;
 
 query:
