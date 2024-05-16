@@ -21,6 +21,9 @@
 /* delimiters */
 %token EOL EOF
 
+%type <Cst.term> term
+%type <Cst.query option> query
+
 %start <Cst.program> prog
 
 %%
@@ -33,13 +36,17 @@
     new program: (Cst.Query (Cst.Term (Cst.Identity [])))
     new program: Cst.Empty
   why does the parser run twice?
+  anser: because once the lexer hits EOF, it will continue emitting EOF every single time the parser calls it.
+  the "EOF" is kind of like stuck in the chamber. so, it will the parser will call the lexer the first time and receive an EOF and create a parse tree,
+  and then your main program will call the parser again and the parser will call the lexer again and receive an EOF again and create a parse tree again
 */
 prog:
-  | PERIOD EOF { (Cst.Query (Cst.Term (Cst.Identity []))) }
+  | query { (Cst.Query $1) }
   ;
 
 query:
-| term { Cst.Term $1 }
+| term EOL { Some (Cst.Term $1) }
+| EOF { None }
 ;
 
 term:
