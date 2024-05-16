@@ -27,11 +27,12 @@
 
 prog:
   | query eos { Cst.Query $1 }
+  | EOF { Cst.Empty }
   ;
 
 eos:
-  | EOL { }
-  | EOF { }
+  | EOL {}
+  | EOF {}
   ;
 
 query:
