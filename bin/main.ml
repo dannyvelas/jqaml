@@ -17,7 +17,6 @@ let run_parser lexbuf =
   in
   repl ()
 
-(*
 let get_next_token lexbuf =
   try Ok (Lexer.token lexbuf)
   with Lexer.SyntaxError msg -> Error (Printf.sprintf "%s%!" msg)
@@ -71,12 +70,29 @@ let run_lexer lexbuf =
     | Error msg -> print_endline msg
   in
   repl ()
-  *)
+
+let usage_msg = "jqaml [-p] [-f <output>]"
+let input_file = ref ""
+let parse = ref false
+
+let speclist =
+  [
+    ( "-p",
+      Arg.Set parse,
+      "if this argument is present, the program will output the parse tree \
+       instead of a token stream" );
+    ( "-f",
+      Arg.Set_string input_file,
+      "read from file. if not present, will read from stdin" );
+  ]
 
 let () =
+  let raise_bad_argument x = raise (Arg.Bad ("Bad argument : " ^ x)) in
+  Arg.parse speclist raise_bad_argument usage_msg;
   let inputch =
-    match Sys.argv.(1) with
-    | exception Invalid_argument _ -> In_channel.stdin
-    | file -> open_in file
+    match !input_file with "" -> In_channel.stdin | _ -> open_in !input_file
   in
-  run_parser @@ Lexing.from_channel inputch
+  if !parse then
+    run_parser @@ Lexing.from_channel inputch
+  else
+    run_lexer @@ Lexing.from_channel inputch
