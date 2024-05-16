@@ -12,7 +12,8 @@ let run_parser lexbuf =
     match cst with
     | Ok x ->
         print_endline @@ Cst.show_program x;
-        repl ()
+        if x != Cst.Empty then
+          repl ()
     | Error msg -> print_endline msg
   in
   repl ()

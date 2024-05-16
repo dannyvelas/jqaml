@@ -1,4 +1,4 @@
-type program = Query of query [@@deriving show]
+type program = Query of query | Empty [@@deriving show]
 and query = Term of term | JoinedQuery of query * operator * query
 
 and term =

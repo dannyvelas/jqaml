@@ -27,7 +27,7 @@
 
 prog:
   | query { Cst.Query $1 }
-  ;
+  | EOF { Cst.Empty }
 
 query:
   | term EOL { Cst.Term $1 }
