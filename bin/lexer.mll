@@ -58,5 +58,5 @@ rule token = parse
   }
 (* whitespace and eof *)
 | whitespace { token lexbuf } (* skip whitespace *)
-| newline { advance_line lexbuf; token lexbuf }
+| newline { advance_line lexbuf; EOL }
 | eof { EOF }

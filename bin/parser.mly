@@ -18,14 +18,14 @@
 %token TRUE FALSE
 /* keywords */ 
 %token DEF REDUCE FOREACH
-/* EOF */
-%token EOF
+/* delimiters */
+%token EOL EOF
 
 %start <Cst.program> prog
 
 %%
 
-prog: expr EOF { Cst.Expr $1 }
+prog: expr EOL { Cst.Expr $1 }
 
 expr :
   | NUMBER_CONSTANT { Cst.Number $1 }
