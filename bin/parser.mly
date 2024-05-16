@@ -25,9 +25,20 @@
 
 %%
 
-prog: expr EOL { Cst.Expr $1 }
+prog:
+  | query { Cst.Query $1 }
+  ;
 
-expr :
+query:
+  | term EOL { Cst.Term $1 }
+  ;
+
+term:
+  | PERIOD { Cst.Identity [] }
+  | RECURSE { Cst.Recurse }
+  | NULL { Cst.Null }
+  | FALSE { Cst.False }
+  | TRUE { Cst.True }
+  | INDEX { Cst.Index $1 }
   | NUMBER_CONSTANT { Cst.Number $1 }
-  | NUMBER_CONSTANT PLUS NUMBER_CONSTANT { Cst.Term ($1, Cst.PLUS, $3) } 
   ;
