@@ -6,6 +6,17 @@ let parse_next_token lexbuf =
         (Printf.sprintf "At offset %d: syntax error.\n%!"
            (Lexing.lexeme_start lexbuf))
 
+let run_parser lexbuf =
+  let rec repl () =
+    let cst = parse_next_token lexbuf in
+    match cst with
+    | Ok x ->
+        print_endline @@ Cst.show_program x;
+        repl ()
+    | Error msg -> print_endline msg
+  in
+  repl ()
+
 (*
 let get_next_token lexbuf =
   try Ok (Lexer.token lexbuf)
@@ -33,44 +44,34 @@ let token_to_str : Parser.token -> string = function
   | AND -> "AND"
   | OR -> "OR"
   | NOT -> "NOT"
-  | INDEX s -> Printf.sprintf "INDEX %s\n" s
+  | INDEX s -> Printf.sprintf "INDEX %s" s
   | NULL -> "NULL"
-  | NUMBER_CONSTANT d -> Printf.sprintf "NUMBER_CONSTANT %d\n" d
-  | STRING_CONSTANT s -> Printf.sprintf "STRING_CONSTANT %s\n" s
+  | NUMBER_CONSTANT d -> Printf.sprintf "NUMBER_CONSTANT %d" d
+  | STRING_CONSTANT s -> Printf.sprintf "STRING_CONSTANT %s" s
   | TRUE -> "TRUE"
   | FALSE -> "FALSE"
   | DEF -> "DEF"
   | REDUCE -> "REDUCE"
   | FOREACH -> "FOREACH"
   | EOF -> "EOF"
-  | IDENTIFIER s -> Printf.sprintf "IDENTIFIER %s\n" s
+  | IDENTIFIER s -> Printf.sprintf "IDENTIFIER %s" s
   | EQ -> "EQ"
   | NEQ -> "NEQ"
   | ASSIGN -> "ASSIGN"
+  | EOL -> "EOL"
 
 let run_lexer lexbuf =
   let rec repl () =
     let token = get_next_token lexbuf in
     match token with
-    | Ok EOF -> ()
     | Ok token ->
         print_endline @@ token_to_str token;
-        repl ()
+        if token != EOF then
+          repl ()
     | Error msg -> print_endline msg
   in
   repl ()
   *)
-
-let run_parser lexbuf =
-  let rec repl () =
-    let cst = parse_next_token lexbuf in
-    match cst with
-    | Ok x ->
-        print_endline @@ Cst.show_program x;
-        repl ()
-    | Error msg -> print_endline msg
-  in
-  repl ()
 
 let () =
   let inputch =
