@@ -11,7 +11,7 @@ and term =
   | BracketSuffix of bracket_suffix
   | Number of int
 
-and bracket_suffix = Iteration | Index of index
+and bracket_suffix = Iteration | BracketIndex of index
 
 and index =
   | BracketQuery of int

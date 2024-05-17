@@ -56,12 +56,13 @@ term:
       | Cst.Iteration -> Cst.Identity [$2]
       | _ -> Cst.BracketSuffix $2
     }
+  | PERIOD STRING_CONSTANT { Cst.Index ($2) }
   ;
 
 suffix:
   | LBRACKET RBRACKET { Cst.Iteration }
-  | LBRACKET NUMBER_CONSTANT RBRACKET { Cst.Index (Cst.BracketQuery $2) } 
-  | LBRACKET NUMBER_CONSTANT COLON RBRACKET { Cst.Index (Cst.StartSlice $2) }
-  | LBRACKET COLON NUMBER_CONSTANT RBRACKET { Cst.Index (Cst.EndSlice $3) }
-  | LBRACKET NUMBER_CONSTANT COLON NUMBER_CONSTANT RBRACKET { Cst.Index (Cst.StartEndSlice ($2, $4)) }
+  | LBRACKET NUMBER_CONSTANT RBRACKET { Cst.BracketIndex (Cst.BracketQuery $2) } 
+  | LBRACKET NUMBER_CONSTANT COLON RBRACKET { Cst.BracketIndex (Cst.StartSlice $2) }
+  | LBRACKET COLON NUMBER_CONSTANT RBRACKET { Cst.BracketIndex (Cst.EndSlice $3) }
+  | LBRACKET NUMBER_CONSTANT COLON NUMBER_CONSTANT RBRACKET { Cst.BracketIndex (Cst.StartEndSlice ($2, $4)) }
   ;

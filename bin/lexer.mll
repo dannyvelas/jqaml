@@ -53,7 +53,7 @@ rule token = parse
   (* constants *)
   | dec_constant { NUMBER_CONSTANT (int_of_string (Lexing.lexeme lexbuf)) } 
   (* idents *)
-  | "." identifier { INDEX (Lexing.lexeme lexbuf) }
+  | "." identifier as identifier { INDEX (identifier) }
   | identifier as word
     {
       try Hashtbl.find keyword_table word
