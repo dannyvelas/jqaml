@@ -21,6 +21,9 @@
 /* delimiters */
 %token EOL EOF
 
+%right PIPE
+
+%type <Cst.bracket_suffix> suffix
 %type <Cst.term> term
 %type <Cst.query> query
 %type <Cst.query option> body
@@ -40,7 +43,7 @@ body:
 
 query:
   | term { Cst.Term $1 }
-  /*| query PIPE query { Cst.JoinedQuery ($1, Cst.Pipe, $3) }*/
+  | query PIPE query { Cst.JoinedQuery ($1, Cst.Pipe, $3) }
   ;
 
 term:

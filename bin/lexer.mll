@@ -42,6 +42,7 @@ let dec_constant = digit+
 rule token = parse 
   | "." { PERIOD }
   (* symbols *)
+  | "|" { PIPE }
   | "[" { LBRACKET }
   | "]" { RBRACKET }
   | ":" { COLON }
