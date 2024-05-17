@@ -34,12 +34,12 @@ prog:
   ;
 
 body:
-  | query { Some $1 }
+  | query EOF { Some $1 }
   | EOF { None }
   ;
 
 query:
-  | term EOF { Cst.Term $1 }
+  | term { Cst.Term $1 }
   /*| query PIPE query { Cst.JoinedQuery ($1, Cst.Pipe, $3) }*/
   ;
 
