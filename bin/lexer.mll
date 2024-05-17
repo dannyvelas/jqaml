@@ -19,6 +19,9 @@ let advance_line lexbuf =
     pos_lnum = pos.pos_lnum + 1
   } in
   lexbuf.lex_curr_p <- pos'
+
+(* re-use same buffer for strings. remember to clear after using *)
+let string_buffer: Buffer.t = Buffer.create 64
 }
 
 (* Helper regexes *)
@@ -37,26 +40,31 @@ let dec_constant = digit+
 (* Rules *)
 
 rule token = parse 
-| "." { PERIOD }
-(* symbols *)
-| "[" { LBRACKET }
-| "]" { RBRACKET }
-| ":" { COLON }
-| "=" { ASSIGN }
-| "==" { EQ }
-| "!=" { NEQ }
-| ".." { RECURSE }
-| "+" { PLUS }
-(* constants *)
-| dec_constant { NUMBER_CONSTANT (int_of_string (Lexing.lexeme lexbuf)) } 
-(* idents *)
-| "." identifier { INDEX (Lexing.lexeme lexbuf) }
-| identifier as word
-  {
-    try Hashtbl.find keyword_table word
-    with Not_found -> IDENTIFIER (Lexing.lexeme lexbuf)
-  }
-(* whitespace and eof *)
-| whitespace { token lexbuf } (* skip whitespace *)
-| newline { advance_line lexbuf; token lexbuf }
-| eof { EOF }
+  | "." { PERIOD }
+  (* symbols *)
+  | "[" { LBRACKET }
+  | "]" { RBRACKET }
+  | ":" { COLON }
+  | "=" { ASSIGN }
+  | "==" { EQ }
+  | "!=" { NEQ }
+  | ".." { RECURSE }
+  | "+" { PLUS }
+  (* constants *)
+  | dec_constant { NUMBER_CONSTANT (int_of_string (Lexing.lexeme lexbuf)) } 
+  (* idents *)
+  | "." identifier { INDEX (Lexing.lexeme lexbuf) }
+  | identifier as word
+    {
+      try Hashtbl.find keyword_table word
+      with Not_found -> IDENTIFIER (Lexing.lexeme lexbuf)
+    }
+  | '"' { read_string lexbuf }
+  (* whitespace and eof *)
+  | whitespace { token lexbuf } (* skip whitespace *)
+  | newline { advance_line lexbuf; token lexbuf }
+  | eof { EOF }
+
+and read_string = parse
+  | '"' { let c = Buffer.contents string_buffer in Buffer.clear string_buffer; STRING_CONSTANT c }
+  | [^ '"'] { Buffer.add_string string_buffer (Lexing.lexeme lexbuf); read_string lexbuf }
