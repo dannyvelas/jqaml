@@ -14,9 +14,9 @@ and term =
 and bracket_suffix = Iteration | Index of index
 
 and index =
-  | BracketQuery of query
-  | StartSlice of query
-  | EndSlice of query
-  | StartEndSlice of query * query
+  | BracketQuery of int
+  | StartSlice of int
+  | EndSlice of int
+  | StartEndSlice of int * int
 
 and operator = PIPE
