@@ -35,17 +35,12 @@ prog:
 
 body:
   | query { Some $1 }
-  | endofinput{ None }
+  | EOF { None }
   ;
 
 query:
-  | term endofinput { Cst.Term $1 }
+  | term EOF { Cst.Term $1 }
   /*| query PIPE query { Cst.JoinedQuery ($1, Cst.Pipe, $3) }*/
-  ;
-
-endofinput:
-  | EOL {}
-  | EOF {}
   ;
 
 term:
