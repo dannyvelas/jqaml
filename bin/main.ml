@@ -11,10 +11,10 @@ let run_parser lexbuf =
     print_string "new program: ";
     let cst = parse_next_token lexbuf in
     match cst with
-    | Ok x ->
-        print_endline @@ Cst.show_program x;
-        if x <> Cst.Query None then
-          repl ()
+    | Ok (Some x) ->
+        print_endline @@ Cst.show_query x;
+        repl ()
+    | Ok None -> ()
     | Error msg -> print_endline msg
   in
   repl ()

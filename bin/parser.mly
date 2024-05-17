@@ -22,19 +22,25 @@
 %token EOL EOF
 
 %type <Cst.term> term
-%type <Cst.query option> query
+%type <Cst.query> query
+%type <Cst.query option> body
 
-%start <Cst.program> prog
+%start <Cst.query option> prog
 
 %%
 
 prog:
-  | query { (Cst.Query $1) }
+  | body { $1 }
+  ;
+
+body:
+  | query { Some $1 }
+  | endofinput{ None }
   ;
 
 query:
-  | term endofinput { Some (Cst.Term $1) }
-  | endofinput { None }
+  | term endofinput { Cst.Term $1 }
+  /*| query PIPE query { Cst.JoinedQuery ($1, Cst.Pipe, $3) }*/
   ;
 
 endofinput:

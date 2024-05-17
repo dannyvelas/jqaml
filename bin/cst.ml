@@ -1,5 +1,5 @@
-type program = Query of query option [@@deriving show]
-and query = Term of term | JoinedQuery of query * operator * query
+type query = Term of term | JoinedQuery of query * operator * query
+[@@deriving show]
 
 and term =
   | Null
@@ -19,4 +19,4 @@ and index =
   | EndSlice of int
   | StartEndSlice of int * int
 
-and operator = PIPE
+and operator = Pipe
