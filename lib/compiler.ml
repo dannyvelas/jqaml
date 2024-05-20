@@ -1,0 +1,11 @@
+let parse_next_token lexbuf =
+  try Ok (Parser.prog Lexer.token lexbuf) with
+  | Lexer.SyntaxError msg -> Error (Printf.sprintf "%s%!" msg)
+  | Parser.Error ->
+      Error
+        (Printf.sprintf "At offset %d: syntax error.\n%!"
+           (Lexing.lexeme_start lexbuf))
+
+let compile (jq_src : string) : (Cst.query option, string) result =
+  let lexbuf = Lexing.from_string jq_src in
+  parse_next_token lexbuf

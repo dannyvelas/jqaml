@@ -1,11 +1,4 @@
 (executable
  (public_name jqaml)
  (name main)
- (modules main parser lexer cst)
- (libraries core)
- (preprocess (pps ppx_jane ppx_deriving.show)))
-
-(menhir
- (modules parser))
-
-(ocamllex lexer)
+ (libraries jqaml_core))

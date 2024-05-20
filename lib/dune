@@ -1,2 +1,8 @@
 (library
- (name jqaml))
+ (name jqaml_core)
+ (preprocess (pps ppx_jane ppx_deriving.show)))
+
+(menhir
+ (modules parser))
+
+(ocamllex lexer)
