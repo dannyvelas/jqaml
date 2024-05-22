@@ -24,9 +24,9 @@
 %type <Cst.bracket_suffix> suffix
 %type <Cst.term> term
 %type <Cst.query> query
-%type <Cst.query option> body
+%type <Cst.query> body
 
-%start <Cst.query option> prog
+%start <Cst.query> prog
 
 %%
 
@@ -35,8 +35,8 @@ prog:
   ;
 
 body:
-  | query EOF { Some $1 }
-  | EOF { None }
+  | query EOF { $1 }
+  | EOF { Cst.Empty }
   ;
 
 query:

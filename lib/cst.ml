@@ -1,4 +1,4 @@
-type query = Term of term | JoinedQuery of term * operator * query
+type query = Empty | Term of term | JoinedQuery of term * operator * query
 [@@deriving show]
 
 and term =

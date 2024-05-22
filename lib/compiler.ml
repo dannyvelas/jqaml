@@ -6,6 +6,7 @@ let parse_next_token lexbuf =
         (Printf.sprintf "At offset %d: syntax error.\n%!"
            (Lexing.lexeme_start lexbuf))
 
-let compile (jq_src : string) : (Cst.query option, string) result =
+let compile (jq_src : string) : (Cst.query, string) result =
   let lexbuf = Lexing.from_string jq_src in
-  parse_next_token lexbuf
+  let cst = parse_next_token lexbuf in
+  cst
