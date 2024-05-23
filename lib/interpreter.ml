@@ -5,7 +5,7 @@ let rec interpret (query : Cst.query) : Cst.term =
   | Cst.JoinedQuery (term, _, query) -> (
       (* for now, operator is ignored bc it can only be PIPE *)
       let lh_term = term in
-      let rh_term = interpret @@ query in
+      let rh_term = interpret query in
       match (lh_term, rh_term) with
       | lh_term, Identity _ -> lh_term
       | lh_term, Recurse ->
