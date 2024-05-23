@@ -31,4 +31,4 @@ let () =
   (* compile jq_src and print it out as a CST *)
   match Compiler.compile jq_src with
   | Error msg -> print_endline msg
-  | Ok query -> print_endline @@ Cst.show_query query
+  | Ok term -> print_endline @@ Cst.show_term term
