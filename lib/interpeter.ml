@@ -1,21 +1,21 @@
-type interpret_result = Number of int | Null | Boolean of bool | Identity | Index
-
-let rec interpret_internal (query : Cst.query): interpret_result =
+let rec interpret (query : Cst.query) : Cst.term =
   match query with
   | Cst.Empty -> Null
-  | Cst.Term term -> (
-      match term with
-      | Null -> Null
-      | True -> Boolean true
-      | False -> Boolean false
-      | Identity _ -> Identity
-      | Recurse -> Identity
-          (* recurse through input: not implemented yet bc objects are not in grammar  *)
-      | Index _ ->
-          Index
-      | Number num -> Number num)
-    | Cst.JoinedQuery term op query -> (
-      let term_result = interpret_internal @@ Cst.query term in
-      let query_result = interpret_internal @@ query in
-
-  )
+  | Cst.Term term -> term
+  | Cst.JoinedQuery (term, _, query) -> (
+      (* for now, operator is ignored bc it can only be PIPE *)
+      let lh_term = term in
+      let rh_term = interpret @@ query in
+      match (lh_term, rh_term) with
+      | lh_term, Identity _ -> lh_term
+      | lh_term, Recurse ->
+          lh_term (* make recurse behave like identity for now *)
+      | lh_term, Index _ ->
+          lh_term
+          (* make Index behave like identitiy as objects are not implemented yet *)
+      | lh_term, BracketSuffix _ ->
+          lh_term
+          (* make BracketSuffix behave like identity as strings/arrays are not implement yet *)
+      | _, rh_term ->
+          rh_term (* if right hand term is just a hard-coded value, return it *)
+      )
