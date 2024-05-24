@@ -7,26 +7,28 @@ let as_number (factor : Cst.factor) : int =
   | Number number -> number
   | Null -> 0
 
-let rec interpret (last_factor : Cst.factor) (query : Cst.query) : Cst.factor =
+let rec interpret' (last_factor : Cst.factor) (query : Cst.query) : Cst.factor =
   match query with
   | Empty -> Null
-  | Expr expr -> (
-      match expr with
-      | Term term -> (
-          match term with Factor Identity -> last_factor | Factor x -> x)
-      | Arithmetic (expr, op, term) -> (
-          let lh_factor = Expr expr |> interpret last_factor in
-          let rh_factor = Expr (Term term) |> interpret last_factor in
-          let lh_number = as_number lh_factor in
-          let rh_number = as_number rh_factor in
-          match op with
-          | Addition -> Number (lh_number + rh_number)
-          | Subtraction -> Number (lh_number - rh_number)))
+  | Expr expr -> resolve_expr last_factor expr
   | JoinedQuery (expr, query) -> (
-      let lh_factor = Expr expr |> interpret last_factor in
-      let rh_factor = interpret lh_factor query in
+      let lh_factor = resolve_expr last_factor expr in
+      let rh_factor = interpret' lh_factor query in
       match (lh_factor, rh_factor) with
       | lh_factor, Identity -> lh_factor
-      | _, rh_factor ->
-          (* if right hand factor is just a hard-coded value, return it *)
-          rh_factor)
+      | _, rh_factor -> rh_factor)
+
+and resolve_expr (last_factor : Cst.factor) (expr : Cst.expr) : Cst.factor =
+  match expr with
+  | Term term -> resolve_term last_factor term
+  | Arithmetic (expr, op, term) -> (
+      let lh_factor = resolve_expr last_factor expr |> as_number in
+      let rh_factor = resolve_term last_factor term |> as_number in
+      match op with
+      | Addition -> Number (lh_factor + rh_factor)
+      | Subtraction -> Number (lh_factor - rh_factor))
+
+and resolve_term (last_factor : Cst.factor) (term : Cst.term) : Cst.factor =
+  match term with Factor Identity -> last_factor | Factor x -> x
+
+let interpret query = interpret' Cst.Null query
