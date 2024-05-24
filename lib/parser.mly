@@ -40,11 +40,19 @@ body:
   ;
 
 query:
-  | term { Cst.Term $1 }
-  | term PIPE query { Cst.JoinedQuery ($1, Cst.Pipe, $3) }
+  | expr { Cst.Expr $1 }
+  | expr PIPE query { Cst.JoinedQuery ($1, Cst.Pipe, $3) }
   ;
 
+expr:
+  | term { Cst.Term $1 }
+  | expr PLUS term { Cst.Arithmetic ($1, Cst.Addition, $3) }
+  | expr MINUS term { Cst.Arithmetic ($1, Cst.Addition, $3) }
+
 term:
+  | factor { Cst.Factor $1 }
+
+factor:
   | PERIOD { Cst.Identity [] }
   | RECURSE { Cst.Recurse }
   | NULL { Cst.Null }

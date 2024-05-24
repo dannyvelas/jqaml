@@ -1,7 +1,10 @@
-type query = Empty | Term of term | JoinedQuery of term * operator * query
+type query = Empty | Expr of expr | JoinedQuery of expr * operator * query
 [@@deriving show]
 
-and term =
+and expr = Term of term | Arithmetic of expr * operator * term
+and term = Factor of factor
+
+and factor =
   | Null
   | True
   | False
@@ -19,4 +22,4 @@ and index =
   | EndSlice of int
   | StartEndSlice of int * int
 
-and operator = Pipe
+and operator = Pipe | Addition
