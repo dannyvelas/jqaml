@@ -28,7 +28,7 @@ let () =
     | _, _ -> raise (Arg.Bad bad_arg_msg)
   in
 
-  (* compile jq_src and print it out as a CST *)
+  (* compile jq_src *)
   match Compiler.compile jq_src with
   | Error msg -> print_endline msg
   | Ok factor -> print_endline @@ Cst.show_factor factor

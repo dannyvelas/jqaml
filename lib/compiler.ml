@@ -12,5 +12,5 @@ let compile (jq_src : string) : (Cst.factor, string) result =
   (match cst with
   | Ok cst -> print_endline @@ Cst.show_query cst
   | Error _ -> ());
-  let value = Result.map Interpreter.interpret cst in
+  let value = Result.map (Interpreter.interpret Cst.Null) cst in
   value
