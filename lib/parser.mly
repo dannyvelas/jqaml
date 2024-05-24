@@ -21,7 +21,6 @@
 /* delimiters */
 %token EOL EOF
 
-%type <Cst.bracket_suffix> suffix
 %type <Cst.term> term
 %type <Cst.query> query
 %type <Cst.query> body
@@ -41,38 +40,22 @@ body:
 
 query:
   | expr { Cst.Expr $1 }
-  | expr PIPE query { Cst.JoinedQuery ($1, Cst.Pipe, $3) }
+  | expr PIPE query { Cst.JoinedQuery ($1, $3) }
   ;
 
 expr:
   | term { Cst.Term $1 }
   | expr PLUS term { Cst.Arithmetic ($1, Cst.Addition, $3) }
-  | expr MINUS term { Cst.Arithmetic ($1, Cst.Addition, $3) }
+  | expr MINUS term { Cst.Arithmetic ($1, Cst.Subtraction, $3) }
 
 term:
   | factor { Cst.Factor $1 }
 
 factor:
-  | PERIOD { Cst.Identity [] }
-  | RECURSE { Cst.Recurse }
+  | PERIOD { Cst.Identity }
   | NULL { Cst.Null }
   | FALSE { Cst.False }
   | TRUE { Cst.True }
-  | INDEX { Cst.Index $1 }
   | NUMBER_CONSTANT { Cst.Number $1 }
-  | PERIOD suffix 
-    {
-      match $2 with
-      | Cst.Iteration -> Cst.Identity [$2]
-      | _ -> Cst.BracketSuffix $2
-    }
-  | PERIOD STRING_CONSTANT { Cst.Index ($2) }
   ;
 
-suffix:
-  | LBRACKET RBRACKET { Cst.Iteration }
-  | LBRACKET NUMBER_CONSTANT RBRACKET { Cst.BracketIndex (Cst.BracketQuery $2) } 
-  | LBRACKET NUMBER_CONSTANT COLON RBRACKET { Cst.BracketIndex (Cst.StartSlice $2) }
-  | LBRACKET COLON NUMBER_CONSTANT RBRACKET { Cst.BracketIndex (Cst.EndSlice $3) }
-  | LBRACKET NUMBER_CONSTANT COLON NUMBER_CONSTANT RBRACKET { Cst.BracketIndex (Cst.StartEndSlice ($2, $4)) }
-  ;
