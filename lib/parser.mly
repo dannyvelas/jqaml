@@ -47,6 +47,8 @@ expr:
   | term { Cst.Term $1 }
   | expr PLUS term { Cst.Arithmetic ($1, Cst.Addition, $3) }
   | expr MINUS term { Cst.Arithmetic ($1, Cst.Subtraction, $3) }
+  | expr MUL term { Cst.Arithmetic ($1, Cst.Multiplication, $3) }
+  | expr DIV term { Cst.Arithmetic ($1, Cst.Division, $3) }
 
 term:
   | factor { Cst.Factor $1 }

@@ -23,7 +23,9 @@ and resolve_expr (last_literal : Cst.literal) (expr : Cst.expr) : Cst.literal =
       let rh_factor = resolve_term last_literal term |> as_number in
       match op with
       | Addition -> Number (lh_factor + rh_factor)
-      | Subtraction -> Number (lh_factor - rh_factor))
+      | Subtraction -> Number (lh_factor - rh_factor)
+      | Multiplication -> Number (lh_factor * rh_factor)
+      | Division -> Number (lh_factor / rh_factor))
 
 and resolve_term (last_literal : Cst.literal) (term : Cst.term) : Cst.literal =
   let (Factor factor) = term in
