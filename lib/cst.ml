@@ -1,5 +1,7 @@
+open Ppx_yojson_conv_lib.Yojson_conv.Primitives
+
 type query = Empty | Expr of expr | JoinedQuery of expr * query
-[@@deriving show]
+[@@deriving yojson]
 
 and expr = Term of term | ExprArithmetic of expr * add_or_subtract * term
 and term = Factor of factor | TermArithmetic of term * mult_or_divide * factor
