@@ -54,6 +54,8 @@ rule token = parse
   | "-" { MINUS }
   | "*" { MUL }
   | "/" { DIV }
+  | "(" { LPAREN }
+  | ")" { RPAREN }
   (* constants *)
   | dec_constant { NUMBER_CONSTANT (int_of_string (Lexing.lexeme lexbuf)) } 
   (* idents *)

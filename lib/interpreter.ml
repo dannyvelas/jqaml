@@ -37,6 +37,9 @@ and resolve_term (last_literal : Cst.literal) (term : Cst.term) : Cst.literal =
 
 and resolve_factor (last_literal : Cst.literal) (factor : Cst.factor) :
     Cst.literal =
-  match factor with Identity -> last_literal | Literal literal -> literal
+  match factor with
+  | Identity -> last_literal
+  | Literal literal -> literal
+  | ParenExpr expr -> resolve_expr last_literal expr
 
 let interpret query = interpret' Cst.Null query

@@ -56,6 +56,7 @@ term:
 factor:
   | PERIOD { Cst.Identity }
   | literal { Literal $1 }
+  | LPAREN expr RPAREN { Cst.ParenExpr $2 }
 
 literal:
   | NULL { Cst.Null }
