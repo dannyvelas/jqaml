@@ -1,6 +1,6 @@
 open Jqaml_core
 
-let usage_msg = "jqaml (-f <file> | <jq filter>)"
+let usage_msg = "jqaml (-f <file> | <string>)"
 let input_file = ref ""
 let jq_src_arg = ref ""
 

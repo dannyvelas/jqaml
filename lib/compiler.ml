@@ -9,8 +9,8 @@ let parse_next_token lexbuf =
 let compile (jq_src : string) : (Cst.literal, string) result =
   let lexbuf = Lexing.from_string jq_src in
   let cst = parse_next_token lexbuf in
-  (match cst with
-  | Ok cst -> print_endline @@ Cst.show_query cst
-  | Error _ -> ());
+  (*(match cst with
+    | Ok cst -> print_endline @@ Cst.show_query cst
+    | Error _ -> ());*)
   let value = Result.map Interpreter.interpret cst in
   value

@@ -7,3 +7,10 @@ and factor = Identity | Literal of literal | ParenExpr of expr
 and literal = Null | True | False | Number of int
 and add_or_subtract = Addition | Subtraction
 and mult_or_divide = Multiplication | Division
+
+let show_literal (literal : literal) : string =
+  match literal with
+  | Null -> "null"
+  | True -> "true"
+  | False -> "false"
+  | Number number -> Printf.sprintf "%d" number
