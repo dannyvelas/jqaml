@@ -31,5 +31,4 @@ let () =
   (* compile jq_src *)
   match Compiler.compile jq_src with
   | Error msg -> print_endline msg
-  | Ok literal ->
-      literal |> Cst.yojson_of_literal |> Yojson.Safe.to_string |> print_endline
+  | Ok literal -> print_endline @@ Cst.show_literal literal
