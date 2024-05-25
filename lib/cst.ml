@@ -1,8 +1,9 @@
 type query = Empty | Expr of expr | JoinedQuery of expr * query
 [@@deriving show]
 
-and expr = Term of term | Arithmetic of expr * operator * term
-and term = Factor of factor
+and expr = Term of term | ExprArithmetic of expr * add_or_subtract * term
+and term = Factor of factor | TermArithmetic of term * mult_or_divide * factor
 and factor = Identity | Literal of literal
 and literal = Null | True | False | Number of int
-and operator = Addition | Subtraction | Multiplication | Division
+and add_or_subtract = Addition | Subtraction
+and mult_or_divide = Multiplication | Division
