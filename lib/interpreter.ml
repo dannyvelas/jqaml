@@ -11,12 +11,9 @@ let rec interpret' (last_factor : Cst.factor) (query : Cst.query) : Cst.factor =
   match query with
   | Empty -> Null
   | Expr expr -> resolve_expr last_factor expr
-  | JoinedQuery (expr, query) -> (
+  | JoinedQuery (expr, query) ->
       let lh_factor = resolve_expr last_factor expr in
-      let rh_factor = interpret' lh_factor query in
-      match (lh_factor, rh_factor) with
-      | lh_factor, Identity -> lh_factor
-      | _, rh_factor -> rh_factor)
+      interpret' lh_factor query
 
 and resolve_expr (last_factor : Cst.factor) (expr : Cst.expr) : Cst.factor =
   match expr with
