@@ -31,4 +31,4 @@ let () =
   (* compile jq_src *)
   match Compiler.compile jq_src with
   | Error msg -> print_endline msg
-  | Ok factor -> print_endline @@ Cst.show_factor factor
+  | Ok literal -> print_endline @@ Cst.show_literal literal

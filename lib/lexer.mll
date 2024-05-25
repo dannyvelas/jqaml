@@ -52,6 +52,8 @@ rule token = parse
   | ".." { RECURSE }
   | "+" { PLUS }
   | "-" { MINUS }
+  | "*" { MUL }
+  | "/" { DIV }
   (* constants *)
   | dec_constant { NUMBER_CONSTANT (int_of_string (Lexing.lexeme lexbuf)) } 
   (* idents *)

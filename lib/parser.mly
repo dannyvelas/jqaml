@@ -53,6 +53,9 @@ term:
 
 factor:
   | PERIOD { Cst.Identity }
+  | literal { Literal $1 }
+
+literal:
   | NULL { Cst.Null }
   | FALSE { Cst.False }
   | TRUE { Cst.True }
