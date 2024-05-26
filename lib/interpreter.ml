@@ -1,3 +1,5 @@
+exception TypeError of string
+
 let rec interpret' (last_value : Value.value) (program : Cst.program) :
     Value.value =
   match program with
@@ -17,12 +19,20 @@ and resolve_expr (last_value : Value.value) (expr : Cst.expr) : Value.value =
   | Literal literal -> literal
   | Grouping expr -> resolve_expr last_value expr
   | Binary (lh_expr, op, rh_expr) -> (
-      let lh_number = resolve_expr last_value lh_expr |> Value.as_number in
-      let rh_number = resolve_expr last_value rh_expr |> Value.as_number in
-      match op with
-      | Addition -> Number (lh_number + rh_number)
-      | Subtraction -> Number (lh_number - rh_number)
-      | Multiplication -> Number (lh_number * rh_number)
-      | Division -> Number (lh_number / rh_number))
+      let lh_value = resolve_expr last_value lh_expr in
+      let rh_value = resolve_expr last_value rh_expr in
+      match (lh_value, op, rh_value) with
+      | Number lh_number, Addition, Number rh_number ->
+          Number (lh_number + rh_number)
+      | Number lh_number, Subtraction, Number rh_number ->
+          Number (lh_number - rh_number)
+      | Number lh_number, Multiplication, Number rh_number ->
+          Number (lh_number * rh_number)
+      | Number lh_number, Division, Number rh_number ->
+          Number (lh_number / rh_number)
+      | String lh_string, Addition, String rh_string ->
+          String (lh_string ^ rh_string)
+      | _ -> raise (TypeError "cannot perform arithmetic on boolean"))
 
-let interpret (program : Cst.program) = interpret' Value.Null program
+let interpret (program : Cst.program) : Value.value =
+  interpret' Value.Null program
