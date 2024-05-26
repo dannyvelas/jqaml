@@ -1,7 +1,13 @@
 exception TypeError of string
 
-let rec interpret' (last_value : Value.value) (program : Cst.program) :
-    Value.value =
+let arithmeticErrMsg =
+  "cannot use arithmetic operator on a non-number or string type"
+
+let rec interpret (program : Cst.program) : Value.value =
+  interpret' Value.Null program
+
+and interpret' (last_value : Value.value) (program : Cst.program) : Value.value
+    =
   match program with
   | Empty -> Null
   | Query query -> resolve_query last_value query
@@ -32,7 +38,4 @@ and resolve_expr (last_value : Value.value) (expr : Cst.expr) : Value.value =
           Number (lh_number / rh_number)
       | String lh_string, Addition, String rh_string ->
           String (lh_string ^ rh_string)
-      | _ -> raise (TypeError "cannot perform arithmetic on boolean"))
-
-let interpret (program : Cst.program) : Value.value =
-  interpret' Value.Null program
+      | _ -> raise (TypeError arithmeticErrMsg))
