@@ -27,7 +27,7 @@
 %type <Cst.expr> expr
 %type <Cst.expr> term
 %type <Cst.expr> factor
-%type <Cst.literal> literal
+%type <Value.value> literal
 
 %%
 
@@ -60,9 +60,10 @@ factor:
   ;
 
 literal:
-  | NULL { Cst.Null }
-  | FALSE { Cst.False }
-  | TRUE { Cst.True }
-  | NUMBER_CONSTANT { Cst.Number $1 }
+  | NULL { Value.Null }
+  | FALSE { Value.False }
+  | TRUE { Value.True }
+  | NUMBER_CONSTANT { Value.Number $1 }
+  | STRING_CONSTANT { Value.String $1 }
   ;
 
