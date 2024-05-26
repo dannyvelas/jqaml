@@ -1,4 +1,4 @@
-type program = Empty | Query of query
+type program = Empty | Query of query [@@deriving show]
 and query = Expr of expr | JoinedQuery of expr * query
 
 and expr =
@@ -6,5 +6,7 @@ and expr =
   | Literal of Value.value
   | Identity
   | Grouping of expr
+  | Unary of unaryop * expr
 
 and operator = Addition | Subtraction | Multiplication | Division
+and unaryop = Positive | Negative

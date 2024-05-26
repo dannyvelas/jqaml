@@ -1,7 +1,7 @@
 exception TypeError of string
 
-let arithmeticErrMsg =
-  "cannot use arithmetic operator on a non-number or string type"
+let binary_err = "cannot use binary operator on a non-number or string type"
+let unary_err = "cannot use unary operator on a non-number type"
 
 let rec interpret (program : Cst.program) : Value.value =
   interpret' Value.Null program
@@ -38,4 +38,10 @@ and resolve_expr (last_value : Value.value) (expr : Cst.expr) : Value.value =
           Number (lh_number / rh_number)
       | String lh_string, Addition, String rh_string ->
           String (lh_string ^ rh_string)
-      | _ -> raise (TypeError arithmeticErrMsg))
+      | _ -> raise (TypeError binary_err))
+  | Unary (operator, operand_expr) -> (
+      let operand_value = resolve_expr last_value operand_expr in
+      match (operator, operand_value) with
+      | Positive, Number number -> Number number
+      | Negative, Number number -> Number ~-number
+      | _ -> raise (TypeError unary_err))

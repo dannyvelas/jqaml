@@ -1,4 +1,5 @@
 type value = Null | True | False | Number of int | String of string
+[@@deriving show]
 
 let show (value : value) : string =
   match value with
