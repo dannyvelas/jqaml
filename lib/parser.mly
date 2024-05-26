@@ -57,6 +57,7 @@ factor:
   | PERIOD { Cst.Identity }
   | literal { Cst.Literal $1 }
   | LPAREN expr RPAREN { Cst.Grouping $2 }
+  | MINUS factor { Cst.Unary $1 $2 }
   ;
 
 literal:
