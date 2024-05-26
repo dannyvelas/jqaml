@@ -21,20 +21,18 @@
 /* delimiters */
 %token EOL EOF
 
-%type <Cst.term> term
-%type <Cst.query> query
-%type <Cst.query> body
+%start <Cst.program> prog
 
-%start <Cst.query> prog
+%type <Cst.query> query
+%type <Cst.expr> expr
+%type <Cst.expr> term
+%type <Cst.expr> factor
+%type <Cst.literal> literal
 
 %%
 
 prog:
-  | body { $1 }
-  ;
-
-body:
-  | query EOF { $1 }
+  | query EOF { Cst.Query $1 }
   | EOF { Cst.Empty }
   ;
 
@@ -44,19 +42,22 @@ query:
   ;
 
 expr:
-  | term { Cst.Term $1 }
-  | expr PLUS term { Cst.ExprArithmetic ($1, Cst.Addition, $3) }
-  | expr MINUS term { Cst.ExprArithmetic ($1, Cst.Subtraction, $3) }
+  | term { $1 }
+  | expr PLUS term { Cst.Binary ($1, Cst.Addition, $3) }
+  | expr MINUS term { Cst.Binary ($1, Cst.Subtraction, $3) }
+  ;
 
 term:
-  | factor { Cst.Factor $1 }
-  | term MUL factor { Cst.TermArithmetic ($1, Cst.Multiplication, $3) }
-  | term DIV factor { Cst.TermArithmetic ($1, Cst.Division, $3) }
+  | factor { $1 }
+  | term MUL factor { Cst.Binary ($1, Cst.Multiplication, $3) }
+  | term DIV factor { Cst.Binary ($1, Cst.Division, $3) }
+  ;
 
 factor:
   | PERIOD { Cst.Identity }
-  | literal { Literal $1 }
-  | LPAREN expr RPAREN { Cst.ParenExpr $2 }
+  | literal { Cst.Literal $1 }
+  | LPAREN expr RPAREN { Cst.Grouping $2 }
+  ;
 
 literal:
   | NULL { Cst.Null }
