@@ -27,12 +27,19 @@ and resolve_expr (last_value : Value.value) (expr : Cst.expr) : Value.value =
   | Binary (lh_expr, op, rh_expr) -> (
       let lh_value = resolve_expr last_value lh_expr in
       let rh_value = resolve_expr last_value rh_expr in
-      match (lh_value, op, rh_value) with
-      | Number lh, Addition, Number rh -> Number (lh + rh)
-      | Number lh, Subtraction, Number rh -> Number (lh - rh)
-      | Number lh, Multiplication, Number rh -> Number (lh * rh)
-      | Number lh, Division, Number rh -> Number (lh / rh)
-      | String lh, Addition, String rh -> String (lh ^ rh)
+      match (lh_value, rh_value) with
+      | Number lh, Number rh -> (
+          match op with
+          | Addition -> Number (lh + rh)
+          | Subtraction -> Number (lh - rh)
+          | Multiplication -> Number (lh * rh)
+          | Division -> Number (lh / rh)
+          | GreaterThan -> Bool (lh > rh)
+          | GreaterThanEqual -> Bool (lh >= rh)
+          | LessThan -> Bool (lh < rh)
+          | LessThanEqual -> Bool (lh <= rh)
+          | Equal -> Bool (lh == rh))
+      | String lh, String rh -> String (lh ^ rh)
       | _ -> raise (TypeError binary_err))
   | Unary (operator, operand_expr) -> (
       let operand_value = resolve_expr last_value operand_expr in

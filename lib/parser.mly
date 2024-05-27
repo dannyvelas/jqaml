@@ -63,8 +63,8 @@ factor:
 
 literal:
   | NULL { Value.Null }
-  | FALSE { Value.False }
-  | TRUE { Value.True }
+  | FALSE { Value.Bool false }
+  | TRUE { Value.Bool true }
   | NUMBER_CONSTANT { Value.Number $1 }
   | STRING_CONSTANT { Value.String $1 }
   ;

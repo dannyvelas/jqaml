@@ -8,5 +8,15 @@ and expr =
   | Grouping of expr
   | Unary of unaryop * expr
 
-and operator = Addition | Subtraction | Multiplication | Division
+and operator =
+  | Addition
+  | Subtraction
+  | Multiplication
+  | Division
+  | GreaterThan
+  | LessThan
+  | GreaterThanEqual
+  | LessThanEqual
+  | Equal
+
 and unaryop = Positive | Negative

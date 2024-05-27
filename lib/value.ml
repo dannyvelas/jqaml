@@ -1,10 +1,9 @@
-type value = Null | True | False | Number of int | String of string
+type value = Null | Bool of bool | Number of int | String of string
 [@@deriving show]
 
 let show (value : value) : string =
   match value with
   | Null -> "null"
-  | True -> "true"
-  | False -> "false"
+  | Bool b -> string_of_bool b
   | Number number -> string_of_int number
   | String s -> s
