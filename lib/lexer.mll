@@ -49,6 +49,10 @@ rule token = parse
   | "=" { ASSIGN }
   | "==" { EQ }
   | "!=" { NEQ }
+  | ">" { GT }
+  | "<" { LT }
+  | ">=" { GTE }
+  | "<=" { LTE }
   | ".." { RECURSE }
   | "+" { PLUS }
   | "-" { MINUS }

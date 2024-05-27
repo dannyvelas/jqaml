@@ -38,7 +38,8 @@ and resolve_expr (last_value : Value.value) (expr : Cst.expr) : Value.value =
           | GreaterThanEqual -> Bool (lh >= rh)
           | LessThan -> Bool (lh < rh)
           | LessThanEqual -> Bool (lh <= rh)
-          | Equal -> Bool (lh == rh))
+          | Equal -> Bool (lh == rh)
+          | NotEqual -> Bool (lh != rh))
       | String lh, String rh -> String (lh ^ rh)
       | _ -> raise (TypeError binary_err))
   | Unary (operator, operand_expr) -> (

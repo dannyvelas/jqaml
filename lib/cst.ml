@@ -18,5 +18,6 @@ and operator =
   | GreaterThanEqual
   | LessThanEqual
   | Equal
+  | NotEqual
 
 and unaryop = Positive | Negative

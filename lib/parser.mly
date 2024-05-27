@@ -8,7 +8,7 @@
 /* logical operators */
 %token AND OR NOT
 /* comparison operators */
-%token EQ NEQ
+%token EQ NEQ GT LT GTE LTE
 /* indexing */
 %token <string> INDEX
 /* constants */
@@ -25,8 +25,11 @@
 
 %type <Cst.query> query
 %type <Cst.expr> expr
+%type <Cst.expr> equality
+%type <Cst.expr> comparison
 %type <Cst.expr> term
 %type <Cst.expr> factor
+%type <Cst.expr> primary
 %type <Value.value> literal
 
 %%
@@ -42,23 +45,41 @@ query:
   ;
 
 expr:
+  | equality { $1 }
+  ;
+
+equality:
+  | equality EQ comparison { Cst.Binary ($1, Cst.Equal, $3) }
+  | equality NEQ comparison { Cst.Binary ($1, Cst.NotEqual, $3) }
+  | comparison { $1 }
+  ;
+
+comparison:
+  | comparison GT term { Cst.Binary ($1, Cst.GreaterThan, $3) }
+  | comparison GTE term { Cst.Binary ($1, Cst.GreaterThanEqual, $3) }
+  | comparison LT term { Cst.Binary ($1, Cst.LessThan, $3) }
+  | comparison LTE term { Cst.Binary ($1, Cst.LessThanEqual, $3) }
   | term { $1 }
-  | expr PLUS term { Cst.Binary ($1, Cst.Addition, $3) }
-  | expr MINUS term { Cst.Binary ($1, Cst.Subtraction, $3) }
   ;
 
 term:
+  | term PLUS factor { Cst.Binary ($1, Cst.Addition, $3) }
+  | term MINUS factor { Cst.Binary ($1, Cst.Subtraction, $3) }
   | factor { $1 }
-  | term MUL factor { Cst.Binary ($1, Cst.Multiplication, $3) }
-  | term DIV factor { Cst.Binary ($1, Cst.Division, $3) }
   ;
 
 factor:
+  | factor MUL primary { Cst.Binary ($1, Cst.Multiplication, $3) }
+  | factor DIV primary { Cst.Binary ($1, Cst.Division, $3) }
+  | primary { $1 }
+  ;
+
+primary:
   | PERIOD { Cst.Identity }
   | literal { Cst.Literal $1 }
   | LPAREN expr RPAREN { Cst.Grouping $2 }
-  | PLUS factor { Cst.Unary (Cst.Positive, $2) }
-  | MINUS factor { Cst.Unary (Cst.Negative, $2) }
+  | PLUS primary { Cst.Unary (Cst.Positive, $2) }
+  | MINUS primary { Cst.Unary (Cst.Negative, $2) }
   ;
 
 literal:
