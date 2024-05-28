@@ -1,4 +1,4 @@
-type program = Empty | Query of query [@@deriving show]
+type program = Empty | Query of query
 and query = Expr of expr | JoinedQuery of expr * query
 
 and expr =

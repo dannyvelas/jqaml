@@ -1,9 +1,7 @@
-type value = Null | Bool of bool | Number of int | String of string
-[@@deriving show]
+type value = Yojson.Safe.t
 
-let show (value : value) : string =
-  match value with
-  | Null -> "null"
-  | Bool b -> string_of_bool b
-  | Number number -> string_of_int number
-  | String s -> s
+let from_channel (ch : in_channel) : value =
+  let line = In_channel.input_line ch in
+  match line with Some x -> Yojson.Safe.from_string x | None -> `Null
+
+let show (v : value) : string = Yojson.Safe.to_string v

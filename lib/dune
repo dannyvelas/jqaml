@@ -1,6 +1,6 @@
 (library
  (name jqaml_core)
- (preprocess (pps ppx_jane ppx_deriving.show)))
+ (preprocess (pps ppx_jane ppx_deriving.show ppx_yojson_conv)))
 
 (menhir
  (modules parser))

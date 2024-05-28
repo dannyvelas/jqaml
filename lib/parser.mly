@@ -83,10 +83,10 @@ primary:
   ;
 
 literal:
-  | NULL { Value.Null }
-  | FALSE { Value.Bool false }
-  | TRUE { Value.Bool true }
-  | NUMBER_CONSTANT { Value.Number $1 }
-  | STRING_CONSTANT { Value.String $1 }
+  | NULL { `Null }
+  | FALSE { `Bool false }
+  | TRUE { `Bool true }
+  | NUMBER_CONSTANT { `Int $1 }
+  | STRING_CONSTANT { `String $1 }
   ;
 

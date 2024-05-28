@@ -9,8 +9,9 @@ let parse_next_token lexbuf =
 let compile (jq_src : string) : (Value.value, string) result =
   let lexbuf = Lexing.from_string jq_src in
   let cst = parse_next_token lexbuf in
+  let input_value = Value.from_channel In_channel.stdin in
   (*(match cst with
     | Ok cst -> print_endline @@ Cst.show_query cst
     | Error _ -> ());*)
-  let value = Result.map Interpreter.interpret cst in
+  let value = Result.map (Interpreter.interpret input_value) cst in
   value
