@@ -23,7 +23,7 @@ and resolve_expr (last_value : Value.value) (expr : Cst.expr) : Value.value =
   match expr with
   | Identity -> last_value
   | Literal literal -> literal
-  | Grouping expr -> resolve_expr last_value expr
+  | Grouping expr -> resolve_query last_value expr
   | Binary (lh_expr, op, rh_expr) -> (
       let lh_value = resolve_expr last_value lh_expr in
       let rh_value = resolve_expr last_value rh_expr in

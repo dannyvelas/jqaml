@@ -5,7 +5,7 @@ and expr =
   | Binary of expr * operator * expr
   | Literal of Value.value
   | Identity
-  | Grouping of expr
+  | Grouping of query
   | Unary of unaryop * expr
 
 and operator =

@@ -77,7 +77,7 @@ factor:
 primary:
   | PERIOD { Cst.Identity }
   | literal { Cst.Literal $1 }
-  | LPAREN expr RPAREN { Cst.Grouping $2 }
+  | LPAREN query RPAREN { Cst.Grouping $2 }
   | PLUS primary { Cst.Unary (Cst.Positive, $2) }
   | MINUS primary { Cst.Unary (Cst.Negative, $2) }
   ;
