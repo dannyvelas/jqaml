@@ -7,5 +7,4 @@ let from_channel (ch : in_channel) : value =
 let show (v : value) : string = Yojson.Safe.to_string v
 
 let index_assoc (assoc : (string * value) list) (s : string) : value =
-  try List.find (fun (str, _) -> str == s) assoc |> snd
-  with Not_found -> `Null
+  try List.find (fun (str, _) -> str = s) assoc |> snd with Not_found -> `Null
