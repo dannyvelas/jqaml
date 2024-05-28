@@ -79,6 +79,7 @@ primary:
   | LPAREN query RPAREN { Cst.Grouping $2 }
   | PLUS primary { Cst.Unary (Cst.Positive, $2) }
   | MINUS primary { Cst.Unary (Cst.Negative, $2) }
+  | INDEX { Cst.Index $1 }
   | literal { Cst.Literal $1 }
   ;
 

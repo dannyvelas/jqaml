@@ -2,6 +2,7 @@ exception TypeError of string
 
 let binary_err = "cannot use binary operator on a non-number or string type"
 let unary_err = "cannot use unary operator on a non-number type"
+let index_err = "cannot index a non-object type"
 
 let rec interpret (last_value : Value.value) (program : Cst.program) :
     Value.value =
@@ -45,3 +46,7 @@ and resolve_expr (last_value : Value.value) (expr : Cst.expr) : Value.value =
       | Positive, `Int number -> `Int number
       | Negative, `Int number -> `Int ~-number
       | _ -> raise (TypeError unary_err))
+  | Index operand -> (
+      match last_value with
+      | `Assoc assoc -> Value.index_assoc assoc operand
+      | _ -> raise (TypeError index_err))
