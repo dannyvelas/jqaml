@@ -1,0 +1,8 @@
+- [X] break up interpreter to be different functions
+- [X] add support for reading from stdin
+- [ ] add support for object streaming from stdin
+- [ ] add support for object literals
+- [ ] add support for array literals
+- [ ] add support for indexing objects/arrays
+- [ ] add support for slicing arrays
+- [ ] add support for variables
